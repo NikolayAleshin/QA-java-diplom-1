@@ -70,21 +70,20 @@ public class BurgerTest {
     @Test
     public void getPriceFloatNumberTest() {
         burger.setBuns(bun);
+        burger.addIngredient(ingredient);
         Mockito.when(bun.getPrice()).thenReturn(10.02f);
         Mockito.when(ingredient.getPrice()).thenReturn(22.32f);
 
         float actualPrice = burger.getPrice();
-        assertEquals(20.04f, actualPrice, 0.0f);
+        assertEquals(42.36f, actualPrice, 0.0f);
     }
 
     @Test
     public void getPriceZero() {
         burger.setBuns(bun);
-        Mockito.when(bun.getPrice()).thenReturn(0f);
-        Mockito.when(ingredient.getPrice()).thenReturn(0f);
 
         float actualPrice = burger.getPrice();
-        assertEquals(0f, actualPrice, 0.0f);
+        assertEquals(0.00f, actualPrice, 0.0f);
     }
 
     @Test
