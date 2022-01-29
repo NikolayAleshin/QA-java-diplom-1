@@ -7,9 +7,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
-
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -17,14 +14,11 @@ public class BurgerTest {
 
     @Mock
     Bun bun;
-//
-//    @Mock
-//    Burger burger;
 
     Burger burger;
 
     @Mock
-    Ingredient ingredient;
+    Ingredient ingredient, ingredient2;
 
     @Before
     public void init() {
@@ -62,14 +56,68 @@ public class BurgerTest {
     }
 
     @Test
-    public void moveIngredient() {
+    public void moveIngredientAndCheckSwapTest() {
+        burger.addIngredient(ingredient);
+        burger.addIngredient(ingredient2);
+        assertEquals(ingredient, burger.ingredients.get(0));
+        assertEquals(ingredient2, burger.ingredients.get(1));
+
+        burger.moveIngredient(0, 1);
+        assertEquals(ingredient2, burger.ingredients.get(0));
+        assertEquals(ingredient, burger.ingredients.get(1));
     }
 
     @Test
-    public void getPrice() {
+    public void getPriceFloatNumberTest() {
+        burger.setBuns(bun);
+        Mockito.when(bun.getPrice()).thenReturn(10.02f);
+        Mockito.when(ingredient.getPrice()).thenReturn(22.32f);
+
+        float actualPrice = burger.getPrice();
+        assertEquals(20.04f, actualPrice, 0.0f);
     }
 
     @Test
-    public void getReceipt() {
+    public void getPriceZero() {
+        burger.setBuns(bun);
+        Mockito.when(bun.getPrice()).thenReturn(0f);
+        Mockito.when(ingredient.getPrice()).thenReturn(0f);
+
+        float actualPrice = burger.getPrice();
+        assertEquals(0f, actualPrice, 0.0f);
+    }
+
+    @Test
+    public void getReceiptOnlyBun() {
+        burger.setBuns(bun);
+        Mockito.when(bun.getPrice()).thenReturn(10.02f);
+        Mockito.when(bun.getName()).thenReturn("Булочка");
+
+        assertEquals("(==== Булочка ====)\r\n" +
+                "(==== Булочка ====)\r\n" +
+                "\r\n" +
+                "Price: 20,040001\r\n", burger.getReceipt());
+    }
+
+    @Test
+    public void getReceiptBunAndIngredient() {
+        burger.setBuns(bun);
+        burger.addIngredient(ingredient);
+        burger.addIngredient(ingredient2);
+        Mockito.when(bun.getPrice()).thenReturn(10.02f);
+        Mockito.when(ingredient.getPrice()).thenReturn(22.32f);
+        Mockito.when(ingredient2.getPrice()).thenReturn(10.32f);
+        Mockito.when(bun.getName()).thenReturn("Булочка");
+        Mockito.when(ingredient.getType()).thenReturn(IngredientType.SAUCE);
+        Mockito.when(ingredient2.getType()).thenReturn(IngredientType.FILLING);
+        Mockito.when(ingredient.getName()).thenReturn("картошка");
+        Mockito.when(ingredient2.getName()).thenReturn("котлета");
+
+        assertEquals("(==== Булочка ====)\r\n" +
+                "= sauce картошка =\r\n" +
+                "= filling котлета =\r\n" +
+                "(==== Булочка ====)\r\n" +
+                "\r\n" +
+                "Price: 52,680000\r\n", burger.getReceipt());
     }
 }

@@ -30,12 +30,12 @@ public class BunParameterizedTest {
     @Test
     public void getNameTest() {
         Bun actual = new Bun(name, price);
-        assertEquals(actual.getName(), name);
+        assertEquals(name, actual.getName());
     }
 
     @Test
     public void getPriceTest() {
         Bun actual = new Bun(name, price);
-        assertEquals(actual.getPrice(), price, 0.0f);
+        assertEquals(price, actual.getPrice(), 0.0f);
     }
 }
